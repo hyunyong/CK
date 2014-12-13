@@ -37,7 +37,9 @@ public class re01 extends javax.swing.JApplet {
        gamma = getGamma(mass, kenergy);
        return Math.sqrt(1.0-1.0/(gamma*gamma));
     }
-    
+    public void dipole(){
+      double matrix.matrix
+    }
     public void iniArr(){
       for(int x=0;x<bin_num;x++){
         x_val[x] = x;
@@ -102,6 +104,7 @@ public class re01 extends javax.swing.JApplet {
             g.setColor(Color.blue);
             //System.out.format(String.valueOf(pL));
             g.fillRect(100,50,pL,30);
+            g.fillOval(100,100, 10, 10);
           
         }
     }
