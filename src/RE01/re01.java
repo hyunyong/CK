@@ -13,10 +13,13 @@ import java.awt.Graphics;
  */
 public class re01 extends javax.swing.JApplet {
     double mass, kenergy,beta, gamma;
-   
     int bin_num = 100;
     int[] x_val = new int[bin_num];
     int[] y_val = new int[bin_num];
+
+
+
+   
     
     public void setMass(double mass_){
       mass = mass_;
@@ -30,16 +33,19 @@ public class re01 extends javax.swing.JApplet {
     public void setKenergy(double kenergy_){
       kenergy = kenergy_;
     }
-    public double getGamma(double mass, double kenergy){
-      return 1.0 + kenergy/mass;
+    public void calGamma(double mass, double kenergy){
+      gamma =  1.0 + kenergy/mass;
     }
-    public double getBeta(double mass, double kenergy){
-       gamma = getGamma(mass, kenergy);
-       return Math.sqrt(1.0-1.0/(gamma*gamma));
+    public void calBeta(){
+       beta = Math.sqrt(1.0-1.0/(gamma*gamma));
     }
-    public void dipole(){
-      double matrix.matrix
+    public double getGamma(){
+      return gamma;
     }
+    public double getBeta(){
+      return beta;
+    }
+    
     public void iniArr(){
       for(int x=0;x<bin_num;x++){
         x_val[x] = x;
@@ -86,26 +92,64 @@ public class re01 extends javax.swing.JApplet {
             ex.printStackTrace();
         }
     }
-     public class PlotPan extends javax.swing.JPanel{                
+    public class Plotbeta extends javax.swing.JPanel{
+    }
+    public class Plotgamma extends javax.swing.JPanel{
+    }
+    public class PlotPan extends javax.swing.JPanel{                
         private int radius;
         PlotPan(){
             super();
             radius = 0 ;
         }
+        
         public void paintComponent(Graphics g)
         {   
+            calGamma(getMass(), getKenergy());
+            calBeta();
+            
             double L0 = 500.0;
-            double L;
-            L = L0/getGamma(getMass(), getKenergy());
+            double L = L0/getGamma();
             double hight = 10.0;
-            int phight = (int)(hight/10.0);
             int pL = (int)(L);
             super.paintComponent(g);
             g.setColor(Color.blue);
             //System.out.format(String.valueOf(pL));
+            g.fillRect(100,50,(int)L0,30);
+            g.setColor(Color.red);
             g.fillRect(100,50,pL,30);
-            g.fillOval(100,100, 10, 10);
-          
+            g.setColor(Color.black);
+            String tmpm = "";
+            tmpm += "The E0(mass): ";
+            tmpm += String.valueOf(getMass());
+            tmpm += " MeV";
+            g.drawString(tmpm, 100, 110);
+            String tmpk = "";
+            tmpk += "The kinetic energy : ";
+            tmpk += String.valueOf(getKenergy());
+            tmpk += " MeV";
+            g.drawString(tmpk, 100, 130);
+            String tmps = "";
+            tmps += "The Object speed : ";
+            tmps += String.valueOf(getBeta());
+            tmps += " C";
+            g.drawString(tmps, 100, 150);
+            String tmpl = "";
+            tmpl += "Length contraction : L = ";
+            tmpl += String.valueOf(1.0/getGamma());
+            tmpl += " L0";
+            g.drawString(tmpl, 100, 170);
+            String tmpt = "";
+            tmpt += "Time dilation : T = ";
+            tmpt += String.valueOf(getGamma());
+            tmpt += " T0";
+            g.drawString(tmpt, 100, 190);
+            
+            
+            
+            
+        
+           
         }
     }
     /**
@@ -119,9 +163,10 @@ public class re01 extends javax.swing.JApplet {
 
         plot = new PlotPan();
         jButton1 = new javax.swing.JButton();
-        setbeta_slider = new javax.swing.JSlider();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
+        betaPlot = new Plotgamma();
+        gammaPlot = new Plotbeta();
 
         plot.setPreferredSize(new java.awt.Dimension(700, 0));
 
@@ -129,11 +174,11 @@ public class re01 extends javax.swing.JApplet {
         plot.setLayout(plotLayout);
         plotLayout.setHorizontalGroup(
             plotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 700, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         plotLayout.setVerticalGroup(
             plotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 235, Short.MAX_VALUE)
         );
 
         jButton1.setText("Cal.");
@@ -143,68 +188,79 @@ public class re01 extends javax.swing.JApplet {
             }
         });
 
-        setbeta_slider.setMaximum(1);
-        setbeta_slider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                setbeta_sliderStateChanged(evt);
-            }
-        });
-        setbeta_slider.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                setbeta_sliderPropertyChange(evt);
-            }
-        });
-
-        jTextField1.setText("Mass");
+        jTextField1.setText("Mass in MeV");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
             }
         });
 
-        jTextField2.setText("Kenergy");
+        jTextField2.setText("Kenergy in MeV");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
             }
         });
 
+        javax.swing.GroupLayout betaPlotLayout = new javax.swing.GroupLayout(betaPlot);
+        betaPlot.setLayout(betaPlotLayout);
+        betaPlotLayout.setHorizontalGroup(
+            betaPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        betaPlotLayout.setVerticalGroup(
+            betaPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout gammaPlotLayout = new javax.swing.GroupLayout(gammaPlot);
+        gammaPlot.setLayout(gammaPlotLayout);
+        gammaPlotLayout.setHorizontalGroup(
+            gammaPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 401, Short.MAX_VALUE)
+        );
+        gammaPlotLayout.setVerticalGroup(
+            gammaPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(plot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
-                                    .addComponent(jTextField1))
-                                .addGap(39, 39, 39))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(setbeta_slider, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 67, Short.MAX_VALUE))))
+                        .addComponent(betaPlot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(gammaPlot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(plot, javax.swing.GroupLayout.DEFAULT_SIZE, 813, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextField1))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(77, 77, 77)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(plot, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53)
-                .addComponent(setbeta_slider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(362, Short.MAX_VALUE))
-            .addComponent(plot, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(betaPlot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(gammaPlot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -221,17 +277,6 @@ public class re01 extends javax.swing.JApplet {
         System.out.format(String.valueOf(getMass()));
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    private void setbeta_sliderPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_setbeta_sliderPropertyChange
-        // TODO add your handling code here:
-    }//GEN-LAST:event_setbeta_sliderPropertyChange
-
-    private void setbeta_sliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_setbeta_sliderStateChanged
-        // TODO add your handling code here:
-        
-        double beta_ = Double.valueOf(evt.toString());
-        System.out.format(String.valueOf(beta_));
-    }//GEN-LAST:event_setbeta_sliderStateChanged
-
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
         double kenergy_ = Double.valueOf(evt.getActionCommand());
@@ -242,10 +287,11 @@ public class re01 extends javax.swing.JApplet {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel betaPlot;
+    private javax.swing.JPanel gammaPlot;
     private javax.swing.JButton jButton1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JPanel plot;
-    private javax.swing.JSlider setbeta_slider;
     // End of variables declaration//GEN-END:variables
 }
