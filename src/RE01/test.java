@@ -20,24 +20,22 @@ public class test extends javax.swing.JApplet {
     double n, k, ke, nstep, T, t0, spread, pulse, ddx, dt,epsilon, sigma, eaf, kstart, freq_in;
     double epsz = 8.85419e-12;
     double c = 299792458.0;
+    double abs_l1, abs_l2, abs_l3, abs_h1, abs_h2, abs_h3;
     
-    int bin_num = 400;
+    int bin_num = 800;
     int xoffset = 50;
     int yoffset = 200;
-    int geoStart = 150;
+    int geoStart = 250;
     
     int kc;
-    int abs_num = 50;
+
     int m_num = 2;
     int numlay_;
     int lambda_;
     double zoom = 50;
     double[] ex = new double[bin_num];
     double[] hy = new double[bin_num];
-    
-    double[] abs_low = new double[abs_num];
-    double[] abs_high = new double[abs_num];
-    
+
     double[] cb = new double[bin_num];
     double[] ca = new double[bin_num];
     
@@ -71,15 +69,16 @@ public class test extends javax.swing.JApplet {
         return c/(double)lambda_;
     }
     public void setGeo(){
-        geo_w[0]=15;
-        geo_w[1]=20;
-        numlay_ =5;
+        geo_w[0]=25;
+        geo_w[1]=30;
+
         
         for(int x=0;x<geoStart;x++){
             ca[x] = 0.5;
             cb[x] = 0.5;
         }
         int x0 = geoStart;
+        System.out.print(x0);
         for(int nl=0;nl<numlay_;nl++){
             for(int x=x0;x<x0+geo_w[0];x++){
                 ca[x] = 2.0;
@@ -96,7 +95,8 @@ public class test extends javax.swing.JApplet {
             cb[x] = 0.5;
                     
         }
-
+   
+        
         }
 
 
@@ -110,22 +110,33 @@ public class test extends javax.swing.JApplet {
         
         pulse = Math.exp(-0.5*(Math.pow((t0-T)/spread, 2.0)));
         //pulse = Math.sin(2*Math.PI*freq_in*dt*T);
-        ex[5] =  pulse;
+        ex[5] =  ex[5]+pulse;
+        
+        //Absorbing boundary
+        ex[0] = abs_l2;
+        abs_l2 = abs_l1;
+        abs_l1 = ex[1];
+        
+        ex[bin_num-1] = abs_h2;
+        abs_h2 = abs_h1;
+        abs_h1 = ex[bin_num-2];
+        /*
+        for(int l = abs_lay-1;l>0;l--){
+            ex[l] = abs_low[l][abs_num-1];
+            ex[bin_num-l-1] = abs_high[l][abs_num-1];
+            for(int i=abs_num-2;i>0;i--){
+                abs_low[l][i+1] = abs_low[l][i];
+                abs_high[l][i+1]= abs_high[l][i];
+            }
+            abs_low[l][0] = ex[l+1];
+            abs_high[l][0] = ex[bin_num-1];
+        }*/
         for(int x=0; x <bin_num-1;x++){
             hy[x] = hy[x] + cb[x]*(ex[x]-ex[x+1]);
         }
-        //Absorbing boundary
-        ex[0] = abs_low[abs_num-1];
-        ex[bin_num-1] = abs_high[abs_num-1];
-        for(int i = abs_num-2;i>0;i--){
-            abs_low[i+1] = abs_low[i];
-            abs_high[i+1] = abs_high[i];
-        }
-        abs_low[0] = ex[1];
-        abs_high[0] = ex[bin_num-2];
-  
-
         
+        
+      
     }
     /**
      * Initializes the applet test
@@ -207,8 +218,8 @@ public class test extends javax.swing.JApplet {
         }
         public void paintComponent(Graphics g){
             super.paintComponent(g);
-            int x0 = geoStart;
-        
+            int x0 = geoStart+xoffset;
+            System.out.print(x0);
             for(int x=0;x<numlay_;x++){
                 
                 g.setColor(Color.DARK_GRAY);
@@ -223,9 +234,9 @@ public class test extends javax.swing.JApplet {
                 g.drawLine(posi[x-1]+xoffset,(int)(ex[x-1]*zoom)+yoffset, posi[x]+xoffset, (int)(ex[x]*zoom)+yoffset);
                 
             }
-            g.setColor(Color.BLUE);
+            g.setColor(Color.orange);
             for(int x=1; x<bin_num ; x++){
-                g.drawLine(posi[x-1]+xoffset,(int)(-ca[x-1]*zoom)+yoffset-100, posi[x]+xoffset, (int)(-ca[x]*zoom)+yoffset-100);
+                g.drawLine(posi[x-1]+xoffset,(int)(-ca[x-1]*10)+yoffset-50, posi[x]+xoffset, (int)(-ca[x]*10)+yoffset-50);
                 
             }
         
@@ -266,7 +277,13 @@ public class test extends javax.swing.JApplet {
         m2_w = new javax.swing.JSpinner();
         jLabel8 = new javax.swing.JLabel();
 
+        setMaximumSize(new java.awt.Dimension(617, 518));
+        setMinimumSize(new java.awt.Dimension(617, 518));
+
         testplot.setBackground(new java.awt.Color(255, 255, 255));
+        testplot.setMaximumSize(new java.awt.Dimension(593, 330));
+        testplot.setMinimumSize(new java.awt.Dimension(593, 330));
+        testplot.setPreferredSize(new java.awt.Dimension(593, 330));
 
         javax.swing.GroupLayout testplotLayout = new javax.swing.GroupLayout(testplot);
         testplot.setLayout(testplotLayout);
@@ -276,7 +293,7 @@ public class test extends javax.swing.JApplet {
         );
         testplotLayout.setVerticalGroup(
             testplotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 320, Short.MAX_VALUE)
+            .addGap(0, 330, Short.MAX_VALUE)
         );
 
         start_b.setText("Start");
@@ -392,7 +409,9 @@ public class test extends javax.swing.JApplet {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(testplot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(testplot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -401,7 +420,7 @@ public class test extends javax.swing.JApplet {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -432,14 +451,13 @@ public class test extends javax.swing.JApplet {
                             .addComponent(set_b, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(start_b, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(exit_b, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(149, 149, 149)))
-                .addContainerGap())
+                        .addGap(161, 161, 161))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(testplot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -498,8 +516,11 @@ public class test extends javax.swing.JApplet {
 
     private void start_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_start_bActionPerformed
         // TODO add your handling code here:
-        timerStart();
+        
         setGeo();
+        initFDTD();
+        
+        timerStart();
     }//GEN-LAST:event_start_bActionPerformed
 
     private void m1_nStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m1_nStateChanged
