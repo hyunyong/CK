@@ -34,10 +34,11 @@ public class test extends javax.swing.JApplet {
     int numlay_;
     int lambda_;
     int lambda_tmp =300;
-    double zoom = 50;
+    double zoom = 30;
     double[] ex = new double[bin_num];
     double[] hy = new double[bin_num];
-
+    double[] intensity = new double[bin_num];
+    
     double[] cb = new double[bin_num];
     double[] ca = new double[bin_num];
     double[] dis_n = new double[bin_num];
@@ -51,11 +52,12 @@ public class test extends javax.swing.JApplet {
 
     public void initFDTD(){
         
-        ddx = 0.01; //set the cell size to 1 cm
-        dt = ddx/(2*c); //cla. the time step
+        abs_l1=0.0;abs_l2=0.0;abs_l3=0.0;abs_h1=0.0;abs_h2=0.0;abs_h3=0.0;
+        ddx = 10.e-9; //set the cell size to 1 cm
+        dt = ddx/(2.0*c); //cla. the time step
         lambda_ = lambda_tmp;
         freq_in = lambdaTofreq(lambda_);
-        System.out.print(freq_in);
+
         kc = bin_num/2;
         t0 = 40.0;
         spread = 12;
@@ -72,7 +74,7 @@ public class test extends javax.swing.JApplet {
     }
     
     public double lambdaTofreq(double lambda_){
-        return c/(double)lambda_;
+        return c/(double)lambda_/1.e-9;
     }
     public void setGeo(){
         geo_w[0]=w_l[0];
@@ -85,7 +87,7 @@ public class test extends javax.swing.JApplet {
             dis_n[x] = 1.0;
         }
         int x0 = geoStart;
-        System.out.print(x0);
+       
         for(int nl=0;nl<numlay_;nl++){
             for(int x=x0;x<x0+geo_w[0];x++){
                 ca[x] = 0.5;
@@ -118,10 +120,10 @@ public class test extends javax.swing.JApplet {
             ex[x] = ex[x] + ca[x]*(hy[x-1] - hy[x]);
         }
         
-        pulse = Math.exp(-0.5*(Math.pow((t0-T)/spread, 2.0)));
-       // pulse = Math.sin(2*pi*freq_in*dt*T);
-        //System.out.print(pulse);
-        ex[5] =  ex[5]+pulse;
+        //pulse = Math.exp(-0.5*(Math.pow((t0-T)/spread, 2.0)));
+        pulse = Math.sin(2*pi*freq_in*dt*T);
+
+         ex[5] =  ex[5]+pulse;
         
         //Absorbing boundary
         ex[0] = abs_l2;
@@ -136,7 +138,10 @@ public class test extends javax.swing.JApplet {
             hy[x] = hy[x] + cb[x]*(ex[x]-ex[x+1]);
         }
         
-        
+        for(int x=0; x<bin_num;x++){
+            //intensity[x] = Math.sqrt(ex[x]*ex[x]+hy[x]*hy[x]);
+            intensity[x] =   ex[x];
+        }
       
     }
     /**
@@ -238,8 +243,8 @@ public class test extends javax.swing.JApplet {
             }
             g.setColor(Color.RED);
             for(int x=1; x<bin_num ; x++){
-                g.drawLine(posi[x-1]+xoffset,(int)(ex[x-1]*zoom)+yoffset, posi[x]+xoffset, (int)(ex[x]*zoom)+yoffset);
-                
+                //g.drawLine(posi[x-1]+xoffset,(int)(ex[x-1]*zoom)+yoffset, posi[x]+xoffset, (int)(ex[x]*zoom)+yoffset);
+                g.drawLine(posi[x-1]+xoffset,(int)(intensity[x-1]*zoom)+yoffset, posi[x]+xoffset, (int)(intensity[x]*zoom)+yoffset);
             }
             g.setColor(Color.orange);
             for(int x=1; x<bin_num ; x++){
