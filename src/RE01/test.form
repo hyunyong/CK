@@ -180,13 +180,13 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Matrial 1 n"/>
+        <Property name="text" type="java.lang.String" value="Material 1 n"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSpinner" name="m1_n">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="1.0" maximum="10.0" minimum="1.0" numberType="java.lang.Double" stepSize="0.09999999999999998" type="number"/>
+          <SpinnerModel initial="1.0" maximum="5.0" minimum="1.0" numberType="java.lang.Double" stepSize="0.09999999999999998" type="number"/>
         </Property>
       </Properties>
       <Events>
@@ -196,7 +196,7 @@
     <Component class="javax.swing.JSpinner" name="m2_n">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="1.0" maximum="10.0" minimum="1.0" numberType="java.lang.Double" stepSize="0.09999999999999998" type="number"/>
+          <SpinnerModel initial="1.0" maximum="5.0" minimum="1.0" numberType="java.lang.Double" stepSize="0.09999999999999998" type="number"/>
         </Property>
       </Properties>
       <Events>
@@ -205,7 +205,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Matrial 2 n"/>
+        <Property name="text" type="java.lang.String" value="Material 2 n"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
@@ -284,7 +284,7 @@
     <Component class="javax.swing.JSpinner" name="m1_w">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="0" maximum="1000" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="0" maximum="1000" minimum="0" numberType="java.lang.Integer" stepSize="10" type="number"/>
         </Property>
       </Properties>
       <Events>
@@ -293,13 +293,13 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Matrial 1 w"/>
+        <Property name="text" type="java.lang.String" value="Material 1 thikness [nm]"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSpinner" name="m2_w">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="0" maximum="1000" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="0" maximum="1000" minimum="0" numberType="java.lang.Integer" stepSize="10" type="number"/>
         </Property>
       </Properties>
       <Events>
@@ -308,7 +308,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Matiral 2 w"/>
+        <Property name="text" type="java.lang.String" value="Matiral 2 thickness [nm]"/>
       </Properties>
     </Component>
   </SubComponents>

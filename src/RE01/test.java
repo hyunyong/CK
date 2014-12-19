@@ -224,17 +224,44 @@ public class test extends javax.swing.JApplet {
         }
         public void paintComponent(Graphics g){
             super.paintComponent(g);
+            g.setColor(Color.getHSBColor(45, 84, 100));
+            g.fillRect(20, 20, 700, 100);
             g.setColor(Color.BLACK);
             String tmpl = "Wave length = ";
             tmpl += String.valueOf(lambda_);
             tmpl += " nm";
             g.drawString(tmpl, 50, 50);
+            String tmplay = "Number of pair layer = ";
+            tmplay += String.valueOf(numlay_);
+            g.drawString(tmplay, 50, 80);
+            
+            String tmpm1n = "Marterial 1 n: ";
+            tmpm1n += String.valueOf((double)((int)(n_l[0]*10.0))/10.0);
+            g.drawString(tmpm1n, 300, 50);
+            String tmpm1w = "Marterial 1 thinkness : ";
+            tmpm1w += String.valueOf(geo_w[0]*10);
+            tmpm1w += " nm";
+            g.drawString(tmpm1w, 300, 80);
+            
+            String tmpm2n = "Marterial 2 n: ";
+            tmpm2n += String.valueOf((double)((int)(n_l[1]*10.0))/10.0);
+            g.drawString(tmpm2n, 500, 50);
+            String tmpm2w = "Marterial 2 thinkness : ";
+            tmpm2w += String.valueOf(geo_w[1]*10);
+            tmpm2w += " nm";
+            g.drawString(tmpm2w, 500, 80);
+            String tmpo = "Optical index n";
+            g.setColor(Color.orange);
+            g.drawString(tmpo, 50, 300);
+            g.setColor(Color.RED);
+            String tmpex = "Electric filed x componet";
+            g.drawString(tmpex, 50, yoffset-50);
                   
             int x0 = geoStart+xoffset;
            
             for(int x=0;x<numlay_;x++){
                 
-                g.setColor(Color.DARK_GRAY);
+                g.setColor(Color.GRAY);
                 g.fillRect(x0, yoffset-50, geo_w[0],100);
                 g.setColor(Color.LIGHT_GRAY);
                 g.fillRect(x0+geo_w[0], yoffset-50, geo_w[1], 100);
@@ -248,7 +275,7 @@ public class test extends javax.swing.JApplet {
             }
             g.setColor(Color.orange);
             for(int x=1; x<bin_num ; x++){
-                g.drawLine(posi[x-1]+xoffset,(int)(-dis_n[x-1]*20.0)+yoffset-50, posi[x]+xoffset, (int)(-dis_n[x]*20.0)+yoffset-50);
+                g.drawLine(posi[x-1]+xoffset,(int)(-dis_n[x-1]*10.0)+330, posi[x]+xoffset, (int)(-dis_n[x]*10.0)+330);
                 
             }
         
@@ -311,23 +338,23 @@ public class test extends javax.swing.JApplet {
             }
         });
 
-        jLabel1.setText("Matrial 1 n");
+        jLabel1.setText("Material 1 n");
 
-        m1_n.setModel(new javax.swing.SpinnerNumberModel(1.0d, 1.0d, 10.0d, 0.09999999999999998d));
+        m1_n.setModel(new javax.swing.SpinnerNumberModel(1.0d, 1.0d, 5.0d, 0.09999999999999998d));
         m1_n.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 m1_nStateChanged(evt);
             }
         });
 
-        m2_n.setModel(new javax.swing.SpinnerNumberModel(1.0d, 1.0d, 10.0d, 0.09999999999999998d));
+        m2_n.setModel(new javax.swing.SpinnerNumberModel(1.0d, 1.0d, 5.0d, 0.09999999999999998d));
         m2_n.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 m2_nStateChanged(evt);
             }
         });
 
-        jLabel3.setText("Matrial 2 n");
+        jLabel3.setText("Material 2 n");
 
         jLabel5.setText("Number of layers");
 
@@ -374,23 +401,23 @@ public class test extends javax.swing.JApplet {
             }
         });
 
-        m1_w.setModel(new javax.swing.SpinnerNumberModel(0, 0, 1000, 1));
+        m1_w.setModel(new javax.swing.SpinnerNumberModel(0, 0, 1000, 10));
         m1_w.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 m1_wStateChanged(evt);
             }
         });
 
-        jLabel7.setText("Matrial 1 w");
+        jLabel7.setText("Material 1 thikness [nm]");
 
-        m2_w.setModel(new javax.swing.SpinnerNumberModel(0, 0, 1000, 1));
+        m2_w.setModel(new javax.swing.SpinnerNumberModel(0, 0, 1000, 10));
         m2_w.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 m2_wStateChanged(evt);
             }
         });
 
-        jLabel8.setText("Matiral 2 w");
+        jLabel8.setText("Matiral 2 thickness [nm]");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -509,7 +536,7 @@ public class test extends javax.swing.JApplet {
     private void m1_wStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m1_wStateChanged
         // TODO add your handling code here:
         int w_ = (int) m1_w.getValue();
-        setW(0, w_);
+        setW(0, w_/10);
     }//GEN-LAST:event_m1_wStateChanged
 
     private void m2_nStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m2_nStateChanged
@@ -521,7 +548,7 @@ public class test extends javax.swing.JApplet {
     private void m2_wStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m2_wStateChanged
         // TODO add your handling code here:
         int w_ = (int) m2_w.getValue();
-        setW(1, w_);
+        setW(1, w_/10);
     }//GEN-LAST:event_m2_wStateChanged
 
     private void numlayStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_numlayStateChanged
