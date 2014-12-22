@@ -45,6 +45,7 @@ public class test extends javax.swing.JApplet {
     
     double[] n_l = new double[m_num];
     double[] k_l = new double[m_num];
+
     int[] w_l = new int[m_num];
     int[] geo_w = new int[m_num]; 
     
@@ -57,6 +58,7 @@ public class test extends javax.swing.JApplet {
         dt = ddx/(2.0*c); //cla. the time step
         lambda_ = lambda_tmp;
         freq_in = lambdaTofreq(lambda_);
+        
 
         kc = bin_num/2;
         t0 = 40.0;
@@ -177,7 +179,8 @@ public class test extends javax.swing.JApplet {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
                     initComponents();
-                    
+                    n_l[0] = 1.0;
+                    n_l[1] = 1.0;
                     initFDTD();
                     
                 }
@@ -225,7 +228,7 @@ public class test extends javax.swing.JApplet {
         public void paintComponent(Graphics g){
             super.paintComponent(g);
             g.setColor(Color.getHSBColor(45, 84, 100));
-            g.fillRect(20, 20, 700, 100);
+            g.fillRect(20, 20, 700, 80);
             g.setColor(Color.BLACK);
             String tmpl = "Wave length = ";
             tmpl += String.valueOf(lambda_);
@@ -254,8 +257,8 @@ public class test extends javax.swing.JApplet {
             g.setColor(Color.orange);
             g.drawString(tmpo, 50, 300);
             g.setColor(Color.RED);
-            String tmpex = "Electric filed x componet";
-            g.drawString(tmpex, 50, yoffset-50);
+            String tmpex = "Electric filed";
+            g.drawString(tmpex, 50, yoffset-70);
                   
             int x0 = geoStart+xoffset;
            
