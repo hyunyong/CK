@@ -91,10 +91,16 @@ public class test extends javax.swing.JApplet {
         int x0 = geoStart;
        
         for(int nl=0;nl<numlay_;nl++){
+            if((x0+geo_w[0])>bin_num){
+                break;
+            }
             for(int x=x0;x<x0+geo_w[0];x++){
                 ca[x] = 0.5;
                 cb[x] = 0.5/((n_l[0]*n_l[0]));
                 dis_n[x] = n_l[0];
+            }
+            if((x0+geo_w[0]+geo_w[1])>bin_num){
+                break;
             }
             for(int x=x0+geo_w[0];x<x0+geo_w[0]+geo_w[1];x++){
                 ca[x] = 0.5;
@@ -102,6 +108,9 @@ public class test extends javax.swing.JApplet {
                 dis_n[x] = n_l[1];
             }
             x0 = x0 + geo_w[0]+geo_w[1];
+           /* if(x0>bin_num){
+                x0 = bin_num-(geo_w[0]+geo_w[1]+1);
+            }*/
         }
         for (int x =x0;x<bin_num;x++){
             ca[x] = 0.5;
@@ -270,6 +279,7 @@ public class test extends javax.swing.JApplet {
                 g.fillRect(x0+geo_w[0], yoffset-50, geo_w[1], 100);
                 
                 x0 = x0+geo_w[0]+geo_w[1];
+                
             }
             g.setColor(Color.RED);
             for(int x=1; x<bin_num ; x++){
