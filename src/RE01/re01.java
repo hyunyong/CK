@@ -13,6 +13,7 @@ import java.awt.Graphics;
  */
 public class re01 extends javax.swing.JApplet {
     double mass, kenergy,beta, gamma;
+
     int bin_num = 400;
     int[] x_val = new int[bin_num];
     int[] y_val = new int[bin_num];
