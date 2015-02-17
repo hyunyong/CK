@@ -13,10 +13,11 @@ import java.awt.Graphics;
  * @author hyunyong
  */
 public class test2 extends javax.swing.JApplet {
-    int p_bin = 270;
+   
     /**
      * Initializes the applet test2
      */
+    int p_bin = 270;
     double r, theta, e, phase, m, beta, gamma,v,b_f;
     double w_ =1.0;
     double m0 = 1.672621777E-27;
@@ -30,14 +31,23 @@ public class test2 extends javax.swing.JApplet {
     double[] r_x = new double[p_bin];
     double[] iso_w = new double[p_bin];
     double[] p_err = new double[p_bin];
-    
+    double[] e_r = new double[p_bin];
+    double p_out = 4.0;
     
     public void set_iso(){
         for(int ix=0; ix<p_bin; ix++){
             double rx = ix/100.0;
             iso[ix] =  b0/(Math.sqrt(1-(rx*w0/c)*(rx*w0/c)));
             iso_w[ix] = b0/(Math.sqrt(1-(rx*w_*w0/c)*(rx*w_*w0/c)));
-            p_err[ix] = 
+            if(ix ==0){
+                p_err[ix] = iso[ix]*q*m0/(Math.sqrt(1-(rx*w0/c)*(rx*w0/c))) -iso_w[ix]*q*m0/(Math.sqrt(1-(rx*w0/c)*(rx*w0/c)));
+            }
+            else{
+                p_err[ix] = iso[ix]*q*m0/(Math.sqrt(1-(rx*w0/c)*(rx*w0/c))) -iso_w[ix]*q*m0/(Math.sqrt(1-(rx*w0/c)*(rx*w0/c)))+p_err[ix-1];
+            }
+            if(Math.abs(p_err[ix]) <2.0E-46){
+                p_out = rx;
+            }
             r_x[ix] = ix;
             
         }
@@ -123,7 +133,10 @@ public class test2 extends javax.swing.JApplet {
                 g.drawLine((int)(r_x[x-1]+50.0),(int)(-iso_w[x-1]*70.+180.0), (int)(r_x[x]+50.0), (int)(-iso_w[x]*70.0+180.0));
                 //g.drawLine((int)(r_x[x-1]+50.0),(int)(iso[x-1]-157.0), (int)(r_x[x]+50.0), (int)(iso[x]-157.0));
             }
-            
+            g.setColor(Color.RED);
+            for(int x=1;x<p_bin;x++){
+                g.drawLine((int)(r_x[x-1]+50.0),(int)(-p_err[x-1]*7E45+230.0), (int)(r_x[x]+50.0), (int)(-p_err[x]*7E45+230.0));
+            }
             
         }
     }
@@ -139,7 +152,9 @@ public class test2 extends javax.swing.JApplet {
             g.setColor(Color.red);
             for(int x=1;x<60;x++){
                 r = cal_r(x*10)*100.0;
-            
+                if (r>p_out*100.0){
+                    break;
+                }
                 g.drawArc(200-(int)r/2, 200-(int)r/2, (int)r, (int)r, 0, 360);
             
                 
@@ -178,14 +193,14 @@ public class test2 extends javax.swing.JApplet {
         plot.setLayout(plotLayout);
         plotLayout.setHorizontalGroup(
             plotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 401, Short.MAX_VALUE)
+            .addGap(0, 457, Short.MAX_VALUE)
         );
         plotLayout.setVerticalGroup(
             plotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        bfw.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(1.0d), null, null, Double.valueOf(0.1d)));
+        bfw.setModel(new javax.swing.SpinnerNumberModel(1.0d, 0.9d, 1.1d, 0.01d));
         bfw.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         bfw.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -211,7 +226,7 @@ public class test2 extends javax.swing.JApplet {
                         .addComponent(mplot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(plot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(24, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(bfw, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -238,8 +253,9 @@ public class test2 extends javax.swing.JApplet {
         // TODO add your handling code here:
         w_ = (double) bfw.getValue();
         set_iso();
-        mplot.repaint();
         plot.repaint();
+        mplot.repaint();
+       
     }//GEN-LAST:event_bfwStateChanged
 
     private void bfwPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_bfwPropertyChange
