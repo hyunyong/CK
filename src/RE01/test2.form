@@ -103,7 +103,7 @@
     <Component class="javax.swing.JSpinner" name="bfw">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="1.0" maximum="1.1" minimum="0.9" numberType="java.lang.Double" stepSize="0.01" type="number"/>
+          <SpinnerModel initial="0.0" maximum="1.1" minimum="0.0" numberType="java.lang.Double" stepSize="0.01" type="number"/>
         </Property>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
           <Color id="Default Cursor"/>

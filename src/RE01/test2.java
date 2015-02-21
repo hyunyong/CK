@@ -19,7 +19,7 @@ public class test2 extends javax.swing.JApplet {
      */
     int p_bin = 270;
     double r, theta, e, phase, m, beta, gamma,v,b_f;
-    double w_ =1.0;
+    double w_ =0.0;
     double m0 = 1.672621777E-27;
     double q = 1.602176565e-19;
     double evtoj = 1./1.602176565e-19;
@@ -45,7 +45,7 @@ public class test2 extends javax.swing.JApplet {
             else{
                 p_err[ix] = iso[ix]*q*m0/(Math.sqrt(1-(rx*w0/c)*(rx*w0/c))) -iso_w[ix]*q*m0/(Math.sqrt(1-(rx*w0/c)*(rx*w0/c)))+p_err[ix-1];
             }
-            if(Math.abs(p_err[ix]) <2.0E-46){
+            if(Math.abs(p_err[ix]) <0.5E-46){
                 p_out = rx;
             }
             r_x[ix] = ix;
@@ -117,9 +117,14 @@ public class test2 extends javax.swing.JApplet {
         public void paintComponent(Graphics g){
             super.paintComponent(g);
             g.setColor(Color.BLACK);
-            g.drawLine(50, 157, 350, 157);
-            g.drawLine(50, 157, 50, 10);
+            g.drawLine(50, 147, 350, 147);
+            g.drawLine(50, 147, 50, 10);
+            g.drawString("r", 345, 157);
+            g.drawString("Bz", 35, 18);
             
+            g.drawLine(50, 290, 350, 290);
+            g.drawLine(50, 190, 50, 290);
+            g.drawString("r", 345, 300);
      
             g.setColor(Color.RED);
             for(int x=1; x<p_bin ; x++){
@@ -135,7 +140,7 @@ public class test2 extends javax.swing.JApplet {
             }
             g.setColor(Color.RED);
             for(int x=1;x<p_bin;x++){
-                g.drawLine((int)(r_x[x-1]+50.0),(int)(-p_err[x-1]*7E45+230.0), (int)(r_x[x]+50.0), (int)(-p_err[x]*7E45+230.0));
+                g.drawLine((int)(r_x[x-1]+50.0),(int)(-p_err[x-1]*3E45+230.0), (int)(r_x[x]+50.0), (int)(-p_err[x]*3E45+230.0));
             }
             
         }
@@ -149,15 +154,30 @@ public class test2 extends javax.swing.JApplet {
             super.paintComponent(g);
             g.setColor(Color.darkGray); 
             g.fillArc(50, 50, 300, 300, 0, 360);
+            g.setColor(Color.black);
+            for(int x=1;x<60;x++){
+                r = cal_r(x*10)*100.0;
+                g.drawArc(200-(int)r/2, 200-(int)r/2, (int)r, (int)r, 0, 360);    
+            }
             g.setColor(Color.red);
             for(int x=1;x<60;x++){
                 r = cal_r(x*10)*100.0;
                 if (r>p_out*100.0){
                     break;
                 }
-                g.drawArc(200-(int)r/2, 200-(int)r/2, (int)r, (int)r, 0, 360);
-            
-                
+                g.drawArc(200-(int)r/2, 200-(int)r/2, (int)r, (int)r, 0, 360);           
+            }
+            g.setColor(Color.blue);
+            for(int x=1;x<60;x+=6){
+                r= cal_r(x*10)*100.0;
+                for (int th=0;th<30;th++){
+                    theta = 2.0*Math.PI/30.0*th+ p_err[(int)(r/100.0)]*3E50;
+                    
+                    double xp = r*Math.cos(theta);
+                    double yp = r*Math.sin(theta);
+                    g.fillArc(199-(int)xp/2, 199-(int)yp/2, 4, 4, 0, 360);
+                    
+                }
             }
         }
     }
@@ -200,7 +220,7 @@ public class test2 extends javax.swing.JApplet {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        bfw.setModel(new javax.swing.SpinnerNumberModel(1.0d, 0.9d, 1.1d, 0.01d));
+        bfw.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, 1.1d, 0.01d));
         bfw.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         bfw.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
