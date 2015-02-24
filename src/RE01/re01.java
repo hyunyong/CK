@@ -12,8 +12,8 @@ import java.awt.Graphics;
  * @author hyunyong
  */
 public class re01 extends javax.swing.JApplet {
-    double mass, kenergy,beta, gamma;
-    
+    double kenergy,beta, gamma;
+    double mass =0.0;
     int mpx=0;
     int mpy=0;
     int bin_num = 400;
@@ -159,7 +159,7 @@ public class re01 extends javax.swing.JApplet {
             int e = 0;
             double p_beta = 0.0;
             double b_beta = 0.0;
-           
+            if(mass>0){
             while(true){
                 calGamma(mass, e);
                 calBeta();
@@ -232,6 +232,8 @@ public class re01 extends javax.swing.JApplet {
             }
            
         }
+        }
+         
     }
     /**
      * This method is called from within the init() method to initialize the
