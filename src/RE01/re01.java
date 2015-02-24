@@ -13,7 +13,9 @@ import java.awt.Graphics;
  */
 public class re01 extends javax.swing.JApplet {
     double mass, kenergy,beta, gamma;
-
+    
+    int mpx=0;
+    int mpy=0;
     int bin_num = 400;
     int[] x_val = new int[bin_num];
     int[] y_val = new int[bin_num];
@@ -149,22 +151,85 @@ public class re01 extends javax.swing.JApplet {
             g.drawString(tmpt, 100, 190);
             
             g.setColor(Color.BLACK);
-            g.drawLine(50, 500, 750, 500);
-            g.drawString("Energy [MeV]", 280, 520);
-            g.drawLine(50, 500, 50, 200);
-            g.drawString("beta",20, 230);
+            g.drawLine(50, 550, 750, 550);
+            g.drawString("Energy [MeV]", 690, 570);
+            g.drawLine(50, 550, 50, 300);
+            g.drawString("beta",20, 330);
             g.setColor(Color.BLUE);
-            double b_beta = 0.0;
+            int e = 0;
             double p_beta = 0.0;
+            double b_beta = 0.0;
+           
             while(true){
-              
-            
+                calGamma(mass, e);
+                calBeta();
+                if(getBeta()>0.99){
+                    break;
+                }
+                e += 1;
             }
+            int log_t = 0;
+            int gx0 = 50;
+            int gy0 = 550;
+            int xbin = 700;
+            int ybin = 250;
+            e = (int)(e*1.1);
+            if(e<10){
+                e = e*100;
+                log_t = 1;
+            }
+ 
             
-            
-            
-            
-        
+            int[] gx_p = new int[e];
+            int[] gy_p = new int[e];
+            double[] gbeta = new double[e];
+            double[] ge = new double[e];
+            for(int x=0;x<e;x++){
+                double ke = 0.0;
+                double w_e = 0.0;
+                if(log_t ==1){
+                    ke = x/100.0;
+                    w_e = e/100.0;
+                }else{
+                    ke = x;
+                    w_e= e;
+                }
+                calGamma(mass,ke);
+                calBeta();
+                
+                gx_p[x] = (int)(gx0+ke*xbin/w_e);
+                gy_p[x] = (int)(gy0-getBeta()*ybin);
+                ge[x] = ke;
+                gbeta[x] = getBeta();
+                
+            }
+            for(int x=1;x<e;x++){
+                g.drawLine(gx_p[x-1], gy_p[x-1], gx_p[x], gy_p[x]);
+            }
+            if(mpy>100){
+                double dr = 1000.0;
+                int index = -1;
+                for(int x=0;x<e;x++){
+                    double dx = Math.abs(gx_p[x]-mpx);
+                    double dy = Math.abs(gy_p[x]-mpy);
+                    double tmp = Math.sqrt(dx*dx+dy*dy);
+                    if(tmp<dr){
+                        dr = tmp;
+                        index = x;
+                    }
+                }
+                g.setColor(Color.BLACK);
+                if(dr<3){
+                    String tmpgbeta = "";
+                    tmpgbeta += "Beta : ";
+                    tmpgbeta += String.valueOf(gbeta[index]);
+                    g.drawString(tmpgbeta, gx_p[index]+10, gy_p[index]-30);
+                    String tmpgke = "";
+                    tmpgke += "Kinetic energy : ";
+                    tmpgke += String.valueOf(ge[index]);
+                    g.drawString(tmpgke, gx_p[index]+10, gy_p[index]-20);
+                }
+            }
            
         }
     }
@@ -184,6 +249,11 @@ public class re01 extends javax.swing.JApplet {
         jButton2 = new javax.swing.JButton();
 
         plot.setPreferredSize(new java.awt.Dimension(700, 0));
+        plot.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                plotMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout plotLayout = new javax.swing.GroupLayout(plot);
         plot.setLayout(plotLayout);
@@ -193,7 +263,7 @@ public class re01 extends javax.swing.JApplet {
         );
         plotLayout.setVerticalGroup(
             plotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 603, Short.MAX_VALUE)
         );
 
         jButton1.setText("Calculation");
@@ -241,18 +311,20 @@ public class re01 extends javax.swing.JApplet {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(77, 77, 77)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(97, 97, 97)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
-                .addContainerGap(287, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(plot, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(77, 77, 77)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(97, 97, 97)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(plot, javax.swing.GroupLayout.PREFERRED_SIZE, 603, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -281,6 +353,13 @@ public class re01 extends javax.swing.JApplet {
         // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void plotMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_plotMouseClicked
+        // TODO add your handling code here:
+        mpx = evt.getX();
+        mpy = evt.getY();
+        plot.repaint();
+    }//GEN-LAST:event_plotMouseClicked
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
