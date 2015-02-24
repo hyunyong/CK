@@ -125,13 +125,13 @@ public class test2 extends javax.swing.JApplet {
             g.drawLine(50, 290, 350, 290);
             g.drawLine(50, 190, 50, 290);
             g.drawString("r", 345, 300);
-     
+            /*
             g.setColor(Color.RED);
             for(int x=1; x<p_bin ; x++){
                 //g.drawLine(posi[x-1]+xoffset,(int)(ex[x-1]*zoom)+yoffset, posi[x]+xoffset, (int)(ex[x]*zoom)+yoffset);
                 g.drawLine((int)(r_x[x-1]+50.0),(int)(-iso[x-1]*70.+180.0), (int)(r_x[x]+50.0), (int)(-iso[x]*70.0+180.0));
                 //g.drawLine((int)(r_x[x-1]+50.0),(int)(iso[x-1]-157.0), (int)(r_x[x]+50.0), (int)(iso[x]-157.0));
-            }
+            }*/
             g.setColor(Color.BLUE);
             for(int x=1; x<p_bin ; x++){
                 //g.drawLine(posi[x-1]+xoffset,(int)(ex[x-1]*zoom)+yoffset, posi[x]+xoffset, (int)(ex[x]*zoom)+yoffset);
@@ -171,7 +171,7 @@ public class test2 extends javax.swing.JApplet {
             for(int x=1;x<60;x+=6){
                 r= cal_r(x*10)*100.0;
                 for (int th=0;th<30;th++){
-                    theta = 2.0*Math.PI/30.0*th+ p_err[(int)(r/100.0)]*3E50;
+                    theta = 2.0*Math.PI/30.0*th+ p_err[(int)(r/100.0)]*3.3E50;
                     
                     double xp = r*Math.cos(theta);
                     double yp = r*Math.sin(theta);
@@ -220,7 +220,7 @@ public class test2 extends javax.swing.JApplet {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        bfw.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, 1.1d, 0.01d));
+        bfw.setModel(new javax.swing.SpinnerNumberModel(1.0d, 1.0d, 3.0d, 0.01d));
         bfw.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         bfw.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -234,6 +234,11 @@ public class test2 extends javax.swing.JApplet {
         });
 
         jButton2.setText("Exit");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -271,7 +276,7 @@ public class test2 extends javax.swing.JApplet {
 
     private void bfwStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bfwStateChanged
         // TODO add your handling code here:
-        w_ = (double) bfw.getValue();
+        w_ = (double) bfw.getValue()-1;
         set_iso();
         plot.repaint();
         mplot.repaint();
@@ -281,6 +286,11 @@ public class test2 extends javax.swing.JApplet {
     private void bfwPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_bfwPropertyChange
         // TODO add your handling code here:
     }//GEN-LAST:event_bfwPropertyChange
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner bfw;
