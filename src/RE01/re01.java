@@ -151,6 +151,7 @@ public class re01 extends javax.swing.JApplet {
             g.drawString(tmpt, 100, 190);
             
             g.setColor(Color.BLACK);
+            g.drawString("Mouse click", 200, 270);
             g.drawLine(50, 550, 750, 550);
             g.drawString("Energy [MeV]", 690, 570);
             g.drawLine(50, 550, 50, 300);
@@ -228,6 +229,8 @@ public class re01 extends javax.swing.JApplet {
                     tmpgke += "Kinetic energy : ";
                     tmpgke += String.valueOf(ge[index]);
                     g.drawString(tmpgke, gx_p[index]+10, gy_p[index]-20);
+                    g.setColor(Color.red);
+                    g.fillArc(gx_p[index]-2, gy_p[index]-2, 4, 4, 0, 360);
                 }
             }
            
